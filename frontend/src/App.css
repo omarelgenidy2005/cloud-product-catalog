@@ -291,4 +291,128 @@ a {
   .products-grid {
     grid-template-columns: 1fr;
   }
+ 
+
+.form-page {
+  min-height: calc(100vh - 90px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 55px;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 680px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 36px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e2e8f0;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-header h1 {
+  margin: 0;
+  font-size: 34px;
+  color: #0f172a;
+}
+
+.form-header p {
+  margin: 10px 0 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #334155;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  font-size: 15px;
+  background: #f8fafc;
+  color: #0f172a;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  background: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.file-upload {
+  border: 2px dashed #cbd5e1;
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.file-upload:hover {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.file-upload input {
+  display: none;
+}
+
+.submit-btn {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 15px;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+  margin-top: 6px;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.3);
+}
+
+@media (max-width: 700px) {
+  .form-card {
+    padding: 26px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
 }

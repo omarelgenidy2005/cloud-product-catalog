@@ -1,57 +1,130 @@
 import { useState } from "react";
 
-function ProductForm({ initialData = {}, onSubmit, buttonText }) {
-  const [name, setName] = useState(initialData.name || "");
-  const [description, setDescription] = useState(initialData.description || "");
-  const [price, setPrice] = useState(initialData.price || "");
-  const [category, setCategory] = useState(initialData.category || "");
-  const [image, setImage] = useState(null);
+function ProductForm({
+  initialData = {},
+  onSubmit,
+  buttonText = "Create Product",
+}) {
+  const [formData, setFormData] = useState({
+    name: initialData.name || "",
+    description: initialData.description || "",
+    price: initialData.price || "",
+    category: initialData.category || "",
+    image: null,
+  });
 
-  async function handleSubmit(e) {
+  function handleChange(e) {
+    const { name, value, files } = e.target;
+
+    if (name === "image") {
+      setFormData((prev) => ({
+        ...prev,
+        image: files[0],
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  }
+
+  function handleSubmit(e) {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("price", price);
-    formData.append("category", category);
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("description", formData.description);
+    data.append("price", formData.price);
+    data.append("category", formData.category);
 
-    if (image) {
-      formData.append("image", image);
+    if (formData.image) {
+      data.append("image", formData.image);
     }
 
-    await onSubmit(formData);
+    onSubmit(data);
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: "500px" }}>
-      <div>
-        <label>Name</label>
-        <input value={name} onChange={(e) => setName(e.target.value)} required />
-      </div>
+    <div className="form-page">
+      <div className="form-card">
+        <div className="form-header">
+          <h1>{buttonText === "Create Product" ? "Add Product" : "Edit Product"}</h1>
+          <p>Fill in the product details and upload an image to store it in S3.</p>
+        </div>
 
-      <div>
-        <label>Description</label>
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
-      </div>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Product Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Example: Black Hoodie"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-      <div>
-        <label>Price</label>
-        <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
-      </div>
+          <div className="form-group">
+            <label>Description</label>
+            <textarea
+              name="description"
+              placeholder="Write a short product description"
+              value={formData.description}
+              onChange={handleChange}
+              rows="4"
+              required
+            />
+          </div>
 
-      <div>
-        <label>Category</label>
-        <input value={category} onChange={(e) => setCategory(e.target.value)} required />
-      </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Price</label>
+              <input
+                type="number"
+                name="price"
+                placeholder="Example: 50"
+                value={formData.price}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-      <div>
-        <label>Image</label>
-        <input type="file" onChange={(e) => setImage(e.target.files[0])} />
-      </div>
+            <div className="form-group">
+              <label>Category</label>
+              <input
+                type="text"
+                name="category"
+                placeholder="Example: Clothes"
+                value={formData.category}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
 
-      <button type="submit">{buttonText}</button>
-    </form>
+          <div className="form-group">
+            <label>Product Image</label>
+            <label className="file-upload">
+              <span>
+                {formData.image ? formData.image.name : "Choose product image"}
+              </span>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+
+          <button className="submit-btn" type="submit">
+            {buttonText}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }
 
