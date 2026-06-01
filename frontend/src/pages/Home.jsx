@@ -49,7 +49,9 @@ function Home() {
       </div>
 
       {products.length === 0 ? (
-        <div className="empty-state">No products found. Add your first product.</div>
+        <div className="empty-state">
+          No products found. Add your first product.
+        </div>
       ) : (
         <div className="products-grid">
           {products.map((product) => (

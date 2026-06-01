@@ -13,28 +13,30 @@ function ProductCard({ product, onDelete }) {
         <div className="no-image">No Image</div>
       )}
 
-      <h2>{product.name}</h2>
+      <div className="product-body">
+        <h2>{product.name}</h2>
 
-      <p className="product-description">
-        {product.description || "No description available"}
-      </p>
+        <p className="product-description">
+          {product.description || "No description available"}
+        </p>
 
-      <div className="product-meta">
-        <span className="price-badge">${product.price}</span>
-        <span className="category-badge">{product.category}</span>
-      </div>
+        <div className="product-meta">
+          <span className="price-badge">${product.price}</span>
+          <span className="category-badge">{product.category}</span>
+        </div>
 
-      <div className="card-actions">
-        <Link className="btn btn-primary" to={`/edit/${product.productId}`}>
-          Edit
-        </Link>
+        <div className="card-actions">
+          <Link className="btn btn-primary" to={`/edit/${product.productId}`}>
+            Edit
+          </Link>
 
-        <button
-          className="btn btn-danger"
-          onClick={() => onDelete(product.productId)}
-        >
-          Delete
-        </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => onDelete(product.productId)}
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );
