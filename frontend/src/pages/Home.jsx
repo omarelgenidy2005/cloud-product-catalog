@@ -1,54 +1,67 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { getProducts, deleteProduct } from "../api/productsApi";
+import ProductCard from "../components/ProductCard";
+import { deleteProduct, getProducts } from "../api/productsApi";
 
 function Home() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   async function loadProducts() {
-    const data = await getProducts();
-    setProducts(data);
+    try {
+      const data = await getProducts();
+      setProducts(data);
+    } catch (error) {
+      console.error("Failed to load products:", error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleDelete(id) {
-    const confirmed = window.confirm("Are you sure you want to delete this product?");
-    if (!confirmed) return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this product?"
+    );
 
-    await deleteProduct(id);
-    loadProducts();
+    if (!confirmDelete) return;
+
+    try {
+      await deleteProduct(id);
+      setProducts((prev) => prev.filter((product) => product.productId !== id));
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      alert("Failed to delete product");
+    }
   }
 
   useEffect(() => {
     loadProducts();
   }, []);
 
+  if (loading) {
+    return <div className="empty-state">Loading products...</div>;
+  }
+
   return (
-    <div>
-      <h1>Products</h1>
-
-      <div className="products-grid">
-        {products.map((product) => (
-          <div className="product-card" key={product.productId}>
-            {product.imageUrl && (
-              <img src={product.imageUrl} alt={product.name} />
-            )}
-
-            <h2>{product.name}</h2>
-            <p>{product.description}</p>
-            <p><strong>Price:</strong> ${product.price}</p>
-            <p><strong>Category:</strong> {product.category}</p>
-
-            <Link to={`/edit/${product.productId}`}>
-              <button>Edit</button>
-            </Link>
-
-            <button onClick={() => handleDelete(product.productId)}>
-              Delete
-            </button>
-          </div>
-        ))}
+    <>
+      <div className="page-header">
+        <h1>Products</h1>
+        <p>Manage your cloud-hosted product catalog with images stored in S3.</p>
       </div>
-    </div>
+
+      {products.length === 0 ? (
+        <div className="empty-state">No products found. Add your first product.</div>
+      ) : (
+        <div className="products-grid">
+          {products.map((product) => (
+            <ProductCard
+              key={product.productId}
+              product={product}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
+    </>
   );
 }
 
