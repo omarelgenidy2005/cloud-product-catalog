@@ -293,12 +293,14 @@ a {
   }
  
 
+/* ADD / EDIT PRODUCT FORM */
+
 .form-page {
   min-height: calc(100vh - 90px);
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 55px;
+  padding: 55px 20px;
 }
 
 .form-card {
@@ -348,9 +350,14 @@ a {
   border-radius: 14px;
   font-size: 15px;
   background: #f8fafc;
-  color: #0f172a;
+  color: #0f172a !important;
   outline: none;
   transition: 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #94a3b8;
 }
 
 .form-group input:focus,
