@@ -2,9 +2,17 @@
 
 Cloud Product Catalog is a web application built for the Cloud Computing 2026 AWS hosting milestone. The application allows users to perform CRUD operations on products and upload product images.
 
-The project is deployed on AWS using EC2, Application Load Balancer, DynamoDB, S3, Lambda, IAM, and CloudWatch.
+The project is deployed on AWS using EC2, Application Load Balancer, CloudFront, DynamoDB, S3, Lambda, IAM, and CloudWatch.
 
 ## Live Deployment
+
+### CloudFront Distribution URL
+
+```text
+https://d3h5tvlxhf45qy.cloudfront.net
+```
+
+CloudFront is configured in front of the Application Load Balancer. It delivers the web application through a global CDN and forwards requests to the ALB origin.
 
 ### Application Load Balancer URL
 
@@ -15,20 +23,14 @@ http://product-app-alb-1780355096.eu-north-1.elb.amazonaws.com
 ### API Test URL
 
 ```text
-http://product-app-alb-1780355096.eu-north-1.elb.amazonaws.com/api/products
+https://d3h5tvlxhf45qy.cloudfront.net/api/products
 ```
 
-### CloudFront Status
-
-CloudFront distribution creation was attempted, but AWS blocked the creation because the account must be verified before adding new CloudFront resources.
-
-AWS error message:
+Alternative ALB API URL:
 
 ```text
-Your account must be verified before you can add new CloudFront resources.
+http://product-app-alb-1780355096.eu-north-1.elb.amazonaws.com/api/products
 ```
-
-Because of this AWS account restriction, the application is currently deployed and fully working through the Application Load Balancer.
 
 ## Project Features
 
@@ -46,6 +48,7 @@ Because of this AWS account restriction, the application is currently deployed a
 * Store Lambda execution logs in CloudWatch
 * Deploy the application on two EC2 instances
 * Use an Application Load Balancer to distribute traffic across EC2 instances
+* Use Amazon CloudFront to deliver the application through a global CDN
 
 ## Technology Stack
 
@@ -67,12 +70,12 @@ Because of this AWS account restriction, the application is currently deployed a
 
 * Amazon EC2
 * Application Load Balancer
+* Amazon CloudFront
 * Amazon DynamoDB
 * Amazon S3
 * AWS Lambda
 * AWS IAM
 * Amazon CloudWatch
-* Amazon CloudFront attempted but blocked by AWS account verification
 
 ## Architecture Summary
 
@@ -88,7 +91,6 @@ Architecture flow:
 User / Browser
         ↓
 Amazon CloudFront
-Attempted but blocked by AWS account verification
         ↓
 Application Load Balancer
         ↓
@@ -106,6 +108,13 @@ CloudWatch stores Lambda logs
 ```
 
 ## AWS Resources
+
+### CloudFront
+
+```text
+Distribution domain name: d3h5tvlxhf45qy.cloudfront.net
+Purpose: Delivers the web application through a global CDN and forwards requests to the Application Load Balancer.
+```
 
 ### Application Load Balancer
 
@@ -191,10 +200,16 @@ Used for Lambda execution logs
 
 ## Backend API Endpoints
 
-Base URL:
+Base URL through CloudFront:
 
 ```text
-/api/products
+https://d3h5tvlxhf45qy.cloudfront.net/api/products
+```
+
+Base URL through ALB:
+
+```text
+http://product-app-alb-1780355096.eu-north-1.elb.amazonaws.com/api/products
 ```
 
 ### Get all products
@@ -382,15 +397,29 @@ server {
 }
 ```
 
+## CloudFront Configuration Summary
+
+CloudFront is configured with the Application Load Balancer as its origin.
+
+```text
+CloudFront domain: d3h5tvlxhf45qy.cloudfront.net
+Origin: product-app-alb-1780355096.eu-north-1.elb.amazonaws.com
+Default root object: index.html
+Allowed methods: GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE
+Cache policy: CachingDisabled
+Origin request policy: AllViewer
+```
+
 ## Deployment Notes
 
 * The application is deployed on two EC2 instances.
 * Both EC2 instances are behind an Application Load Balancer.
+* CloudFront is configured in front of the Application Load Balancer.
 * Both EC2 instances connect to the same DynamoDB table.
 * Both EC2 instances upload images to the same S3 bucket.
 * Lambda is triggered when images are uploaded to the S3 `products/` folder.
-* CloudFront was attempted but blocked by AWS account verification.
-* The working deployed app URL is the Application Load Balancer DNS.
+* The deployed app can be accessed through the CloudFront distribution URL.
+* The Application Load Balancer is used as the CloudFront origin.
 
 ## Architecture Diagram
 
@@ -407,7 +436,8 @@ cloud-product-catalog-architecture.pdf
 
 The demo should show:
 
-* Opening the deployed app using the ALB DNS
+* Opening the deployed app using the CloudFront URL
+* Showing that CloudFront forwards requests to the Application Load Balancer
 * Viewing products
 * Creating a product with an image
 * Verifying the item in DynamoDB
@@ -417,7 +447,7 @@ The demo should show:
 * Deleting a product
 * Showing both EC2 instances
 * Showing the Application Load Balancer target group health
-* Showing CloudFront account verification error
+* Showing the CloudFront distribution
 * Explaining the architecture diagram
 
 ## Submission Details
@@ -428,16 +458,22 @@ The demo should show:
 https://github.com/omarelgenidy2005/cloud-product-catalog
 ```
 
+### CloudFront Distribution Domain
+
+```text
+d3h5tvlxhf45qy.cloudfront.net
+```
+
+### CloudFront URL
+
+```text
+https://d3h5tvlxhf45qy.cloudfront.net
+```
+
 ### Application Load Balancer DNS
 
 ```text
 product-app-alb-1780355096.eu-north-1.elb.amazonaws.com
-```
-
-### CloudFront Distribution Domain
-
-```text
-CloudFront creation was blocked by AWS account verification.
 ```
 
 ### EC2 Private IPs
